@@ -1,0 +1,212 @@
+﻿<head>
+<link type="text/css" rel="stylesheet" href="static/css/station.css" />
+<link type="text/css" rel="stylesheet" href="css/jquery.treetable.css" />
+<link type="text/css" rel="stylesheet"
+	href="css/jquery.treetable.theme.default.css" />
+<script type="text/javascript" src="js/data.js"></script>
+<script src="static/js/lib/eq_switch.js"></script>
+<script src="static/js/lib/station_switch.js"></script>
+<script type="text/javascript" src="static/js/station.js"></script>
+<script type="text/javascript" src="static/js/ztree.js"></script>
+<!-- <script type="text/javascript" src="static/jqgrid/js/jquery.jqGrid.min.js"></script> -->
+
+
+<script type="text/javascript" src="static/js/d3.v3.min.js"></script>
+<script type="text/javascript">
+function show(evt) {
+	// document.getElementById("svgholder").getElementById("junjie").text("111");
+   evt.target.textContent = evt.target.textContent == "开启提示音"?"关闭提示音":"开启提示音";
+   // alert(1);
+   var audio = $("#zyAudio")[0];
+	if(audio.paused){
+		play_audio = true;
+		// obj.value="开启提示音";
+		audio.play();
+	} else {
+		play_audio = false;
+		// obj.value="关闭提示音";
+		audio.pause();
+	}
+  }
+
+  
+</script>
+</head>
+<body>
+	<div class=row>
+		<div id="stations">
+			<ul id="station-lis" class="ztree"></ul>
+		</div>
+		<div class="col-lg-9" style="width:100%; overflow :auto">
+			<div>
+				<div class="operations">
+					
+				</div>
+				<div class=row id="svgholder"></div>
+				<div id="zhaoyuan" style="width: 120px; float: left;" style="display:none">
+					<table id="zy-event-list"></table>
+					<p align="center" style="background-image: url('./images/pcolor.png'); width: 130px;">
+					<input type="button" value="开启提示音" style="color: 615468;" onclick="playOrPaused(this);"></p>
+				</div>
+			</div>
+			<div id="dialog" style="display: none;">
+				<table>
+  					<tr height=270>
+    					<td align="center" valign="top" width=330>
+    						
+    						<h3 id="station_name" style="color: white;">中胜</h3>
+    						<span id="eq_name" style="color: white;">T3 301423</span>&nbsp;&nbsp;&nbsp;&nbsp;
+    						<span id="eq_ip" style="color: white;">0.0.0.0</span>
+    						<div style="color: white;">
+    							<span>设备状态:</span><span id='eq_status'>通知服务(正常服务状态)</span>
+    							<div class="update_div">
+    								<a id="update_ico" title="刷新设备状态" class="update_ico">
+    									<img width="22" height="22" src="images/update.png">
+    								</a>
+    							</div>
+    						</div>
+    						
+    						<div class="box-shadow" style="margin-right:50px;margin-top:10px;height:290px; width: 395px;"><table id="parts-list"></table></div>
+						</td>
+    					<td valign="top"><div id="dialog_svg"></div><br/></td>
+  					</tr>
+ 					 <tr>
+    					<td colspan="2">
+    						<div class= "box-shadow" style="width: 845px;"><table id="event-list"></table></div>
+						</td>
+  					</tr>
+				</table>
+			</div>
+			<div id="username-dialog" title="用户登录" style="display: none;">
+				<table>
+  					<tr>
+    					<td align="center" valign="top" style='color:white;'>
+    						用户：
+						</td>
+    					<td valign="top">
+    					<input id=user_name type=text onkeyup="value=this.value.replace(/\D+/g,'')">
+    					</td>
+  					</tr>
+ 					 <tr>
+    					<td align="center" valign="top" style='color:white;'>
+    						密码：
+						</td>
+    					<td valign="top"><input id="pass_word" type="password"></td>
+  					</tr>
+  					<tr><td></td><td style="color:red;" id="user_msg"></td></tr>
+				</table>
+			</div>
+			<div ng-app="stationApp">
+				<div ng-include="'static/html/eq-switch.agl'"></div>
+				<div ng-include="'static/html/station-switch.agl'"></div>
+				<div id="cmd-dialog" title="发送设备命令" class="row" style="display: none;"
+					ng-controller="cmdDialogCtrl">
+					<div class="col-lg-6"  style="OVERFLOW-Y: auto; height:300px;">
+						<h3>选择设备</h3>
+						<ul id="eq-lis" class="ztree"></ul>
+					</div>
+					<div class="col-lg-6">
+						<h3>选择命令</h3>
+						<table class=cmd-table>
+							
+							<tr>
+								<td><input type=radio name=cmd value=CLOSYN id=cmd_18 checked=checked />&nbsp;<label
+									for=cmd_18 style='color:white;'>强制时钟同步</label></td>
+								<td><input type=radio name=cmd value=EQUSTA id=cmd_19 />&nbsp;<label
+									for=cmd_19 style='color:white;'>设备状态查询</label></td>
+							</tr>
+							<tr>
+								<td><input type=radio name=cmd value=INIBLK id=cmd_5 />&nbsp;<label
+									for=cmd_5 style='color:white;'>黑名单下载</label></td>
+								<td id=td_10><input type=radio name=cmd value=INIWVD id=cmd_10 />&nbsp;<label
+									for=cmd_10 style='color:white;'>模式履历下载</label></td>
+							</tr>
+							<tr>
+								<td><input type=radio name=cmd value=INSERV1 id=cmd_17 />&nbsp;<label
+									for=cmd_17 style='color:white;'>正常服务</label></td>
+								<td><input type=radio name=cmd value=OUTSCE id=cmd_6 />&nbsp;<label
+									for=cmd_6 style='color:white;'>停止服务</label></td>
+							</tr>
+							<tr>
+								<td><input type=radio name=cmd value=ACTAID id=cmd_7
+									 />&nbsp;<label for=cmd_7 style='color:white;'>招援取消</label></td>
+								<td><input type=radio name=cmd value=EQUCTL id=cmd_8
+									 />&nbsp;<label for=cmd_8 style='color:white;'>设备控制</label></td>
+							</tr>
+							<tr>
+								<td><input type=radio name=cmd value=TIKQUP id=cmd_9
+									 />&nbsp;<label for=cmd_9 style='color:white;'>票卡数量上传</label></td>
+								<td id=td_16><input type=radio name=cmd value=AISMOD2 id=cmd_16 />&nbsp;<label
+									for=cmd_16 style='color:white;'>设置为双向闸机</label></td>
+							</tr>
+							<tr>
+								<td id=td_14><input type=radio name=cmd value=AISMOD0 id=cmd_14 />&nbsp;<label
+									for=cmd_14 style='color:white;'>设置为出站闸机</label></td>
+								<td id=td_15><input type=radio name=cmd value=AISMOD1 id=cmd_15 />&nbsp;<label
+									for=cmd_15 style='color:white;'>设置为进站闸机</label></td>
+							</tr>
+							<tr>
+								<td id=td_12><input type=radio name=cmd value=AILMOD0 id=cmd_12 />&nbsp;<label
+									for=cmd_12 style='color:white;'>设置扇门敞开</label></td>
+								<td id=td_13><input type=radio name=cmd value=AILMOD1 id=cmd_13 />&nbsp;<label
+									for=cmd_13 style='color:white;'>设置扇门关闭</label></td>
+							</tr>
+						</table>
+						 <span id='mode_msg_cmd' style='color:red;'>&nbsp;</span>
+					</div>
+				</div>
+
+				<div id="upload-dialog" title="上传设备数据" class="row"
+					style="display: none;" ng-controller="cmdDialogCtrl">
+					<div class="col-lg-6"  style="OVERFLOW-Y: auto; height:300px;">
+						<h3>选择设备</h3>
+						<ul id="eqs-lis" class="ztree"></ul>
+					</div>
+					<div class="col-lg-6">
+						<h3>选择上传类型</h3>
+						<table class=upload-table>
+							<tr>
+								<td><input type=radio name=kmd value=00 id=upload_id checked=checked />&nbsp;<label
+									for=upload_id style='color:white;'>按文件序号上传</label></td>
+								<td><input type=radio name=kmd value=01 id=upload_time />&nbsp;<label
+									for=upload_time style='color:white;'>按文件日期上传</label></td>
+							</tr>
+							<tr id=upload_1>
+								<td style='color:white;'>上传文件起始序号</td>
+								<td><input maxlength="4" id=upload_start type=text onkeyup="this.value=this.value.replace(/[^0-9a-fA-F]+/,'')" onafterpaste="this.value=this.value.replace(/[^0-9a-fA-F]+/,'')"/></td>
+							</tr>
+							<tr id=upload_2>
+								<td style='color:white;'>上传文件终止序号</td>
+								<td><input maxlength="4" id=upload_end type=text onkeyup="this.value=this.value.replace(/[^0-9a-fA-F]+/,'')" onafterpaste="this.value=this.value.replace(/[^0-9a-fA-F]+/,'')"/></td>
+							</tr>
+							<tr id=upload_3 style="display:none">
+								<td style='color:white;'>上传文件日期号</td>
+								<td><input  readonly="readonly"  id="upload_date" type=text/></td>
+							</tr>
+							<tr id=upload_4>
+								<td style='color:white;'>数据类型</td>
+								<td><select id = "upload_select">
+									<option value ="00">全部文件类型</option>
+									<option value ="01">一卡通交易数据文件</option>
+									<option value ="02">一票通交易数据文件</option>
+									<option value ="03">审计数据文件</option>
+									<option value ="04">事件数据文件</option>
+									<option value ="05">线路内交易文件</option>
+								</select></td>
+							</tr>
+						</table>
+						 <span id='mode_msg_upload' style='color:red;'>&nbsp;</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="display:none;">
+    <audio id="audio1" autobuffer="" preload="auto" controls="">
+        <source type="audio/mp3" src="images/3010.mp3"></source>
+    </audio>
+    <audio id="zyAudio" preload="auto">
+        <source type="audio/mp3" src="images/3010.mp3"></source>
+    </audio>
+</div>
+</body>

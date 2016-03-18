@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="static/treetable/css/jquery.treetable.css" />
+<link rel="stylesheet" href="static/treetable/css/jquery.treetable.theme.default.css" />
+<script type="text/javascript" src="static/treetable/js/jquery.treetable.js" ></script>
+<script type="text/javascript" src="js/json2.js"></script>
+<script type="text/javascript">
+$(function(){
+	SetCurrentMenu(8);
+	$("#ztree-main").hide();
+	$("#tab-tables" ).tabs();
+ 	
+	EodStatus();
+	
+	$("th").css({"font-size":"12px;"}); 	
+ 	$("td").css({"font-size":"12px"}); 		
+ 	$("#treeTable1 td").css({"width":"25%"}); 	
+ 	$("#treeTable1 td:first").css({"width":"25%"});		
+ 	$("#tabs-2").show();
+});
+
+function EodStatus(){
+	$("#tabs-2").html('<table id="treeTable1" class=" ui-jqgrid ui-widget ui-widget-content ui-corner-all" border="1">'
+			+'<tbody></tbody></table>');
+	$.ajax({
+		type : "get",
+		url : "../AFCSUP/getAllLinesDevices",
+		dataType : "json",
+		async : false,
+		success : function(msg) {
+			if (JSON.stringify(msg) != "{}") {
+				var deviceStr = "";
+				var stationStr = "";
+				var lineStr = "";
+				for (var i = 0; i < msg.length; i++) {
+					var lineName = msg[i].name;
+					var lineObj = "<tr data-tt-id='node-"+ i +"'><td>"+
+						"<span class='folder'>"+ lineName +"</span></td><td></td><td></td><td></td></tr>";
+					var stationArray = msg[i].children;
+					if(stationArray == null)
+						continue;
+					for (var j = 0; j < stationArray.length; j++) { 
+						var stationName = stationArray[j].name;
+						var stationId = stationArray[j].id;
+						var stationObj = "<tr data-tt-id='node-" + i +"-"+ j +"' data-tt-parent-id='node-"+ i +"' id='"+stationId+"'><td>"+
+							"<span class='folder'>"+stationName+"</span></td><td></td><td></td>><td></td></tr>";
+						var deviceArray = stationArray[j].children;
+						if(deviceArray == null)
+							continue;
+						for (var k = 0; k < deviceArray.length; k++) {
+							var deviceName = deviceArray[k].name;
+							var deviceId = deviceArray[k].id;
+							var deviceObj = "<tr data-tt-id='node-"+ i +"-"+ j +"-"+ k +"' data-tt-parent-id='node-"+ i +"-"+ j +"' id='"+deviceId+"'><td>"+
+								"<span class='file'>"+deviceName+"</span></td><td></td><td></td><td></td></tr>";
+							deviceStr += deviceObj;
+						}
+						stationStr += stationObj;
+						stationStr += deviceStr;
+						deviceStr = "";
+					}
+					lineStr += lineObj;
+					lineStr += stationStr;
+					$("#treeTable1 tbody").append(lineStr);
+					stationStr = "";
+					lineStr = "";
+				}
+				
+			}
+		
+		}
+	}); 
+	
+	$("#treeTable1").treetable({expandable :true});
+	$("#treeTable2").treetable({expandable :true});
+	
+ 	$.ajax({
+		type : "get",
+		url : "../AFCSUP/getServiceStatus",
+		dataType : "json",
+		async : false,
+		success : function(msg) {
+			if (JSON.stringify(msg) != "[]") {
+				for (var i = 0; i < msg.length; i++) {
+					var id = msg[i].id;
+					var statusObj = msg[i].status;
+					var statusArray = [];
+					statusArray.push(statusObj.STACC1);
+					statusArray.push(statusObj.STACC2);
+					statusArray.push(statusObj.STACC3);
+					$("tr[id = '"+ id +"'] td:not(:first)").each(function(index,obj){
+						$(obj).text(statusArray[index]);
+					});
+				}
+			}
+		}
+	});
+ 	
+ 	$("th").css({"color":"black"});
+ 	$("td").css({"color":"black"});
+}
+</script>
+</head>
+<body>
+	<div style="color:white;margin-top:12px;">
+	<div id="tab-tables"  style="height:700px;">
+		<ul>
+			<li><a href="#tabs-1" onclick="type_list='status';zTreeOnclick();">库存列表</a></li>
+		</ul>
+		<div id="tabs-1" class="tab"  style="height:640px;overflow:auto;">
+	<table id="treeTable2" style="position: absolute;width:95.5%; z-index:98"  class="ui-jqgrid ui-widget ui-widget-content ui-corner-all" border="1">
+		<thead>
+			<tr>
+				<th style="font-size: 12px; width:25%">设备</th>
+				<th style="font-size: 12px; width:25%">票箱1车票数目</th>
+				<th style="font-size: 12px; width:25%">票箱2车票数目</th>
+				<th style="font-size: 12px; width:25%">票箱3车票数目</th>
+			</tr>
+		</thead>
+	</table>
+	<div id="tabs-2" style="margin-top:19px; height:570px;overflow-y:scroll; display:none;">
+	<table id="treeTable1" class=" ui-jqgrid ui-widget ui-widget-content ui-corner-all" border="1">
+		<tbody>
+		</tbody>
+	</table>
+	</div>
+	</div>
+	</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<com.avp.nj.sup.serviceadmin.ServiceManager>
+	<rmi_port>15000</rmi_port>	
+	<NodeList>
+	    <com.avp.nj.sup.serviceadmin.Node>
+			<Name>应用服务器</Name>
+			<IP>172.195.20.20</IP>
+		</com.avp.nj.sup.serviceadmin.Node>
+		<com.avp.nj.sup.serviceadmin.Node>
+			<Name>通信服务器</Name>
+			<IP>172.195.20.16</IP>
+		</com.avp.nj.sup.serviceadmin.Node>
+		<com.avp.nj.sup.serviceadmin.Node>
+			<Name>交易服务器</Name>
+			<IP>172.195.20.19</IP>
+		</com.avp.nj.sup.serviceadmin.Node>
+	</NodeList>	
+</com.avp.nj.sup.serviceadmin.ServiceManager>

@@ -1,0 +1,222 @@
+﻿
+<head>
+<link type="text/css" rel="stylesheet" href="css/jquery.treetable.css" />
+<link type="text/css" rel="stylesheet" href="static/css/station.css" />
+<link type="text/css" rel="stylesheet"
+	href="css/jquery.treetable.theme.default.css" />
+<script language="javascript" type="text/javascript">
+var ret_ip="192.168.150.55";
+var requestState = 0;
+var stateDict = {};
+stateDict["1"] = "<div class='cellDiv' style=' background-color:yellow;'>未安装</div>";
+stateDict["2"] = "<div class='cellDiv' style=' background-color:yellow;'>已安装</div>";
+stateDict["4"] = "<div class='cellDiv' style=' background-color:#f77777;'>未启动</div>";
+stateDict["8"] = "<div class='cellDiv' style=' background-color:yellow;'>正在启动</div>";
+stateDict["16"] = "<div class='cellDiv' style=' background-color:yellow;'>正在停止</div>";
+stateDict["32"] = "已启动";
+$(document).ready(function(){
+	$("#tab-tables" ).tabs();
+	$("#bundlesList").jqGrid({
+		datatype: "json",
+		height:630,
+		width:1240,
+	   	colNames:['ID','名称', '版本', '状态', '类型'],
+	   	colModel:[
+	   		{name: 'id', width: 60, sortable: false},
+	   		{name: 'name', width: 260,sortable:false},
+	   		{name: 'edition', width: 260,sortable: false},
+	   		{name: 'status',width: 100, sortable: false},
+	   		{name: 'type',width: 670,sortable: false},
+	   	],	
+	   	rowNum:500,
+	   	forceFit: false,
+	   	autowidth: false,
+	   	autoScroll: false,
+	   	shrinkToFit:false,
+	   	autoencode: false,
+	});
+	
+	SetCurrentMenu(7);
+	var setting = {
+			check: {
+				enable: false
+			},
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+			view: {
+				fontCss : {color:"#333333"}
+			},
+			callback: {
+				onClick: refreshState
+			},
+			async: {
+				enable: true,
+				type: "get",
+				url:"../AFCSUP/getService",
+				autoParam:["id", "name=n", "level=lv"],
+				otherParam:{"otherParam":"zTreeAsyncTest"}
+			}
+		};
+
+	$.fn.zTree.init($("#station-lis"), setting);
+	setTimeout("selecttree()",1000);
+  
+  
+  $("#refreshBtn").bind("click", function () {
+	  refreshState();
+  });
+  
+  $("#frameworkControlBtn").bind("click", function () {
+	  if ($(this).attr("value") == "启动") doOperation(0, "startup");
+	  else doOperation(0, "shutdown");
+  });
+
+  
+  
+});
+
+function selecttree(){
+	var treeObj = $.fn.zTree.getZTreeObj("station-lis");
+	var nodes = treeObj.getNodes();
+	if (nodes.length>0) {
+		treeObj.selectNode(nodes[0]);
+	}
+	refreshState(null,null,nodes[0]);
+}
+
+function refreshState(line, station, treeNode) {
+	if(treeNode){ 
+		ret_ip = treeNode.IP;
+		$("#menu_tree").show();
+		$("#menu_tree_msg").html(treeNode.name);
+	};
+	if (requestState != 0) return;
+	requestState = 1;
+	jQuery.ajax({
+	  url : "osgi_state.jsp?ip="+ret_ip,
+	  type : "GET",
+  success : function(dataObj) {
+    requestState = 0;
+    //$("#frameworkState").html(stateDict[dataObj.frameworkState + ""]);
+    if (dataObj.frameworkState == 32) {
+    	$("#frameworkControlBtn").attr("value", "停止");
+    }
+    else {
+    	$("#frameworkControlBtn").attr("value", "启动");
+    }
+    var trs = $("#bundlesList").find("tr");
+    if (trs.length > 1) {
+    	for (var i=1; i<trs.length; i++) {
+    		$(trs[i]).remove();
+    	}
+    }
+    trs = $("#uninstalledList").find("tr");
+    if (trs.length > 1) {
+        for (var i=1; i<trs.length; i++) {
+            $(trs[i]).remove();
+        }
+    }
+    		
+    if (dataObj.bundles != null && dataObj.bundles.length > 0) {
+    	for (var i=0; i<dataObj.bundles.length; i++) {
+        	var cell = {};
+    		var bundle = dataObj.bundles[i];
+    		cell["id"] =  bundle.id;
+    		cell["name"] =  bundle.symbolicName;
+    		cell["edition"] = bundle.versionMajor + "." + bundle.versionMinor
+    				+ "." + bundle.versionMicro + "." + bundle.versionQualifier;
+    		cell["status"] = stateDict[bundle.state + ""];
+    		cell["type"] = bundle.location;
+
+    		if (bundle.category == "AFC") {
+	        		if (bundle.state == 1) {
+	        			var btn = "<input type='button' onclick=doOperation("+bundle.id+",'install'); value='安装' bundle_id='" + bundle.id + "'/>";
+
+	        			cell["operate"]=btn;
+	        		}
+	        		else {
+	        			//var btn = $("<input type='button' value='卸载' bundle_id='" + bundle.id + "'/>");
+	        			//btn.bind("click", function () {
+	        			//	doOperation($(this).attr("bundle_id"), "uninstall");
+	        			//});
+	        			//cell.append(btn);
+	        			//var span = $("<span>&nbsp;&nbsp;</span>");
+	        			//cell.append(span);
+	        			
+	        			if (bundle.state == 32) {
+	        				btn = "<input type='button' value='停止' onclick=doOperation("+bundle.id+",'stop'); bundle_id='" + bundle.id + "'/>";
+
+	             			cell["operate"]=btn;
+	        			}
+	        			else {
+	        				btn = "<input type='button' value='启动' onclick=doOperation("+bundle.id+",'start');  bundle_id='" + bundle.id + "'/>";
+
+	             			cell["operate"]=btn;
+	        			}
+	        		}
+    		}
+    		jQuery("#bundlesList").jqGrid('addRowData',i+1,cell);  
+    	}
+    }
+    
+    if (dataObj.uninstalled != null && dataObj.uninstalled.length > 0) {
+    	for (var i=0; i<dataObj.uninstalled.length; i++) {
+    		var row = $("<tr></tr>");
+    		var cell = $("<td align='left'>" + dataObj.uninstalled[i] + "</td>");
+    		row.append(cell);
+    		cell = $("<td align='center'></td>");
+    		var btn = $("<input type='button' value='安装' bundle_path='" + dataObj.uninstalled[i] + "'/>");
+			btn.bind("click", function () {
+				doOperation(-1, "install", $(this).attr("bundle_path"));
+			});
+			cell.append(btn);
+			row.append(cell);
+			$("#uninstalledList").append(row);
+    	}
+    }
+	  },
+	  error : function(XMLHttpRequest, textStatus, errorThrown) {
+		requestState = 0;
+	  }
+	});
+}
+
+function doOperation(id, op, path) {//alert(id+","+op);
+	  jQuery.ajax({
+		  url : "osgi_op.jsp",
+		  type : "GET",
+		  data : {id:id, op:op, path:path},
+	      success : function(data) {
+	    	if (!data.success) $("#statusDiv").html("操作错误:" + data.msg); 
+	    	else $("#statusDiv").html("操作成功");
+	    	refreshState();
+		  },
+		  error : function(XMLHttpRequest, textStatus, errorThrown) {
+			  $("#statusDiv").html("操作错误:" + textStatus);
+		  }
+		});
+}
+</script>
+<style>
+body { margin:0px; padding:0px; padding-top:0px; padding-bottom:0px; color: #FFFFFF;}
+.table { border: 1px solid #ffffff; font-size:14px;border-collapse:collapse; }
+</style>
+</head>
+<body style="color: #FFFFFF;">
+	<div class="col-lg-3" id="stations" style="margin-left:-15px; margin-right:15px;float:left;">
+		<ul id="station-lis" class="ztree"></ul>
+	</div>
+	<div id="tab-tables" style="margin-left:15px;width:98%; margin-top:15px;float:left;">
+		<ul>
+			<li><a href="#tabs-1" onclick="type_list='status';zTreeOnclick();">状态列表</a></li>
+		</ul>
+		<div id="tabs-1" class="tab">
+			<table id="bundlesList"></table>
+		</div>
+		
+	</div>
+    
+</body>

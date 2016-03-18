@@ -1,0 +1,1 @@
+SetCurrentMenu(1);

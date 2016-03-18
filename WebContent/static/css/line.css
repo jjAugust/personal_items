@@ -1,0 +1,15 @@
+#svgholder {
+	overflow: hidden;
+	width: 100%;
+}
+
+div.operations {
+	margin-top: 10px;
+}
+
+.ui-widget-header { 
+	border: 1px solid #aaaaaa; 
+	background:#88898b; 
+	color: #222222; 
+	font-weight: bold; 
+}

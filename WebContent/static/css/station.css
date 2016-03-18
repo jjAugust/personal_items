@@ -1,0 +1,122 @@
+#stations
+{
+	display:none;
+    min-height: 480px;
+    overflow: auto;
+    height: 400px;
+    float:left;
+    position: absolute;
+    z-index: 99;
+    width:250px;
+    background: url("images/ui-bg_highlight-soft_100_eeeeee_1x100.png") repeat-x scroll 50% top #EEEEEE;
+    border: 1px solid #DDDDDD;
+    color: #333333;
+}
+
+.update_ico:hover{
+	height:24px;
+	border-radius: 13px;
+    box-shadow: 0 2px 8px 2px rgba(0, 0, 0, 0.35), 0 -1px 0 rgba(0, 0, 0, 0.5) inset, 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+    float: left;
+    margin: 0 30px 60px;
+    position: relative;
+    transition: all 1s ease 0s;
+    width: 40px;
+    background:#88898b; 
+}
+
+#svgholder
+{
+	float: left;
+	width: 103%;
+	overflow: hidden;
+}
+#tblStations
+{
+    border:0;
+}
+div.operations{
+	margin-top:-35px;position: fixed;z-index:99;
+}
+table.cmd-table td, table.upload-table td {
+	min-width: 150px;
+}
+table.cmd-table tr, table.upload-table tr{
+    height: 40px;
+}
+.update_div{
+	top:30px;
+	left:345px;
+	position: absolute;
+	float:right;
+}
+#content > div.row {
+	height: 100%;
+	overflow: hidden;
+}
+#tab-tables {
+	overflow: hidden;
+	height:760px;
+	margin-left: 15px;
+    margin-top: 15px;
+    width:98%;
+}
+.ui-widget-header { 
+    border: 1px solid #aaaaaa; 
+    background:#88898b; 
+    color: #222222; 
+    font-weight: bold; 
+}
+
+.update_ico{
+	height:24px;
+	border-radius: 13px;
+    box-shadow: 0 2px 8px 2px rgba(0, 0, 0, 0.35), 0 -1px 0 rgba(0, 0, 0, 0.5) inset, 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+    float: left;
+    margin: 0 30px 60px;
+    position: relative;
+    transition: all 1s ease 0s;
+    width: 40px;
+}
+
+#searchContent span{
+	margin-left:20px;
+}
+#searchContent input{
+	margin-right:2px;
+}
+#chart4-1, #chart4-2{
+	float: left;
+	width: 50%;
+	margin-top: 20px;
+}
+#tab-head{
+	margin-top: 10px;
+}
+#tab-head span{
+	width: 15%;
+}
+#tab-head-2{
+	float: left;
+	margin-left: 50px;
+}
+#tab-head-3{
+	float: left;
+	margin-left: 50px;
+}
+#tab-head-1{
+	float: right;
+	margin-right: 35px;
+}
+#tabs-3-1, #tabs-5-1{
+	width:15%;
+	float: left
+}
+#tabs-3-2, #tabs-5-2{
+	width:85%;
+	float: left
+}
+input span{
+	margin-left:5px;
+	margin-right:20px
+}

@@ -1,0 +1,36 @@
+<div id="station-dialog" title="发送车站命令" class="row" style="height:850px; display: none;"
+    ng-app="modesApp" ng-controller="modeDialogCtrl">
+   
+    <div class="col-lg-6" style="OVERFLOW-Y: auto; height:300px;">
+        <h3>选择车站</h3>
+        <ul id="switch-lis" class="ztree"></ul>
+    </div>
+    <div class="col-lg-6">
+        <h3>选择命令</h3>
+						<table class=station-table>
+							<tr>
+								<td><input type=radio name=emd value=STACLN id=emd_1  checked=checked/>&nbsp;<label
+									for=emd_1 style='color:white;'>正常关站命令</label></td>
+							</tr>
+							<tr>
+								<td><input type=radio name=emd value=STACLT id=emd_2 />&nbsp;<label
+									for=emd_2 style='color:white;'>临时关站命令</label></td>
+							</tr>
+							<tr>
+								<td><input type=radio name=emd value=STATEM_0 id=emd_3 />&nbsp;<label
+									for=emd_3 style='color:white;'>紧急模式退出</label></td>
+							</tr>
+							<tr>
+								<td><input type=radio name=emd value=STATEM_1 id=emd_4 />&nbsp;<label
+									for=emd_4 style='color:white;'>进入紧急模式</label></td>
+							</tr>
+						</table>
+        <span id='station_msg' style='color:red;'>&nbsp;</span>
+    </div>
+</div>
+<SCRIPT type="text/javascript">
+		
+		$(document).ready(function(){
+			load_station_tree();
+		});
+	</SCRIPT>

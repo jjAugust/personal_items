@@ -1,0 +1,26 @@
+<div id="mode-dialog" title="发送车站运营模式" class="row" style="height:850px; display: none;"
+    ng-app="modesApp" ng-controller="modeDialogCtrl">
+   
+    <div class="col-lg-6" style="OVERFLOW-Y: auto; height:300px;">
+        <h3>选择车站</h3>
+        <ul id="seq-lis" class="ztree"></ul>
+    </div>
+    <div class="col-lg-6">
+        <h3>选择模式</h3>
+        <p ng-repeat="ms in modes" id="mode-list">
+            <input ng-model="$parent.mode_id" type="radio" name="mode_option"
+                id="mode_{{ms.id}}" value="{{ms.id}}" ng-change="changeMode()" />
+            <label for="mode_{{ms.id}}">{{ms.name}}</label><br /> <select
+                ng-disabled="ms.id != $parent.mode_id">
+                <option ng-repeat="mode_code in ms.modes" value="{{mode_code.id}}">{{mode_code.name}}</option>
+            </select>
+        </p>
+        <span id='eq_msg' style='color:red;'>&nbsp;</span>
+    </div>
+</div>
+<SCRIPT type="text/javascript">
+		
+		$(document).ready(function(){
+			load_eq_tree();
+		});
+	</SCRIPT>

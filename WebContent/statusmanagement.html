@@ -1,0 +1,23 @@
+﻿<head>
+<link type="text/css" rel="stylesheet" href="static/css/station.css" />
+<link type="text/css" rel="stylesheet" href="css/jquery.treetable.css" />
+<link type="text/css" rel="stylesheet"
+	href="css/jquery.treetable.theme.default.css" />
+<script type="text/javascript" src="js/data.js"></script>
+<script src="static/js/lib/mode_switch.js"></script>
+<script type="text/javascript" src="static/js/status.js"></script>
+<script type="text/javascript" src="static/js/ztree.js"></script>
+</head>
+<body>
+	<div class="col-lg-3" id="stations" style="margin-left:-15px;">
+		<ul id="station-lis" class="ztree"></ul>
+	</div>
+	<div id="tab-tables">
+		<ul>
+			<li><a href="#tabs-1" onclick="type_list='status';zTreeOnclick();">状态列表</a></li>
+		</ul>
+		<div id="tabs-1" class="tab">
+			<table id="status-list"></table>
+		</div>
+	</div>
+</body>

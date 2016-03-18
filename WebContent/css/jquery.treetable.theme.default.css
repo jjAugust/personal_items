@@ -1,0 +1,89 @@
+#content table.treetable{
+  /*border: 1px solid #888;*/
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 20px;
+  /*margin: 3px 0;*/
+  width: 100%;
+}
+
+#content table.treetable caption{
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+#content table.treetable thead tr{
+  background: #aaa url(../images/bg-table-thead.png) repeat-x top left;
+  font-size: 12px;
+}
+
+#content table.treetable thead tr th{
+  border: 1px solid #888;
+  font-weight: normal;
+  padding: 3px 5px;
+  text-align: center;
+}
+
+#content table.treetable tbody tr td{
+  cursor: default;
+  padding: 3px 5px;
+}
+
+#content table.treetable span{
+  background-position: center left;
+  background-repeat: no-repeat;
+  padding: 0 0 0 20px;
+}
+#content table.treetable span a
+{
+    color:#FFF;
+}
+
+#content table.treetable span.file{
+  background-image: url(../images/file.png);
+}
+
+#content table.treetable span.folder{
+  background-image: url(../images/folder.png);
+}
+
+#content table.treetable tr.collapsed span.indenter a{
+  background-image: url(../images/expand.png);
+}
+
+#content table.treetable tr.expanded span.indenter a{
+  background-image: url(../images/collapse.png);
+}
+
+#content table.treetable tr.selected{
+  background-color: #3875d7;
+  color: #fff;
+}
+
+#content table.treetable tr.selected a 
+{
+    color:#FFF;
+}
+
+
+#content table.treetable tr.collapsed.selected span.indenter a{
+  background-image: url(../images/expand-light.png);
+}
+
+#content table.treetable tr.expanded.selected span.indenter a{
+  background-image: url(../images/collapse-light.png);
+}
+
+#content table.treetable tr.accept,#dialog table.treetable tr.accept {
+  background-color: #a3bce4;
+  color: #fff
+}
+
+#content table.treetable tr.collapsed.accept td span.indenter a{
+  background-image: url(../images/expand-light.png);
+}
+
+#content table.treetable tr.expanded.accept td span.indenter a{
+  background-image: url(../images/collapse-light.png);
+}

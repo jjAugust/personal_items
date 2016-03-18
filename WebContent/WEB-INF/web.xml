@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:web="http://java.sun.com/xml/ns/javaee" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>AFCSUP</display-name>
+  <context-param>
+    <param-name>SITE_TITLE</param-name>
+    <param-value>南京地铁四号线AFC监控系统</param-value>
+  </context-param>
+  <context-param>
+    <param-name>_VAR_LOCAL_IP</param-name>
+    <param-value></param-value>
+  </context-param>
+  <context-param>
+    <param-name>COMM_SERVER_IP</param-name>
+    <param-value>192.168.150.187</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>APP_SERVER_IP</param-name>
+  	<param-value>192.168.150.188</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>DATA_SERVER_IP</param-name>
+  	<param-value>192.168.150.189</param-value>
+  </context-param>
+  <context-param>
+    <param-name>RTDB_ADAPTER_PORT</param-name>
+    <param-value>15700</param-value>
+  </context-param>
+  <context-param>
+    <param-name>RTDB_IP_PORT</param-name>
+    <param-value>15100</param-value>
+  </context-param>
+  <context-param>
+    <param-name>SYS_IP_PORT</param-name>
+    <param-value>14000</param-value>
+  </context-param>  
+  
+  <servlet>
+    <display-name>MetroInitServlet</display-name>
+    <servlet-name>MetroInitServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.ServletInit</servlet-class>
+    <load-on-startup>1</load-on-startup>
+    <enabled>true</enabled>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MetroInitServlet</servlet-name>
+    <url-pattern>/MetroInit</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>GetDevicesByStationServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.GetDevicesByStation</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>GetDevicesByStationServlet</servlet-name>
+    <url-pattern>/GetDevicesByStation</url-pattern>
+  </servlet-mapping>
+  
+    <servlet>
+    <servlet-name>getGrouppedDevicesByStation</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.GetGrouppedDevicesByStation</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>getGrouppedDevicesByStation</servlet-name>
+    <url-pattern>/getGrouppedDevicesByStation</url-pattern>
+  </servlet-mapping>
+
+  
+  <servlet>
+    <servlet-name>GetModesServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.GetModels</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>GetModesServlet</servlet-name>
+    <url-pattern>/GetModes</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>GetStationsServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.GetStations</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>GetStationsServlet</servlet-name>
+    <url-pattern>/GetStations</url-pattern>
+  </servlet-mapping>
+ 
+
+  <servlet>
+    <servlet-name>SendCommandServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.SendCommand</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SendCommandServlet</servlet-name>
+    <url-pattern>/SendCommand</url-pattern>
+  </servlet-mapping>
+ 
+ <servlet>
+    <servlet-name>GetDevicesBydeviceTypeServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.GetDevicesBydeviceType</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetDevicesBydeviceTypeServlet</servlet-name>
+    <url-pattern>/GetDevicesBydeviceType</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>GetAllStationEventsServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetAllStationEvents</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetAllStationEventsServlet</servlet-name>
+    <url-pattern>/GetAllStationEvents</url-pattern>
+  </servlet-mapping>
+  
+ <servlet>
+    <servlet-name>GetAllDeviceEventsServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetAllDeviceEventsByStationSubId</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetAllDeviceEventsServlet</servlet-name>
+    <url-pattern>/GetAllDeviceEvents</url-pattern>
+  </servlet-mapping>
+ 
+  <servlet>
+    <servlet-name>GetAllDeviceinfoEventsServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.GetAllDeviceEventsByStationIdAndDeviceId</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetAllDeviceinfoEventsServlet</servlet-name>
+    <url-pattern>/GetAllDeviceinfoEvents</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>GetEventsBydeviceIdServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.GetEventsBydeviceId</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetEventsBydeviceIdServlet</servlet-name>
+    <url-pattern>/GetEventsBydeviceId</url-pattern>
+  </servlet-mapping>
+ 
+ <servlet>
+    <servlet-name>GetPassengerFlowInfoServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.GetPassengerFlowInfo</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+   <servlet-mapping>
+    <servlet-name>GetPassengerFlowInfoServlet</servlet-name>
+    <url-pattern>/GetPassengerFlowInfo</url-pattern>
+  </servlet-mapping>
+ 
+ 
+  <servlet>
+    <servlet-name>getStationinfoBystationSubId</servlet-name>
+    <servlet-class>com.avp.nj.sup.servlet.GetAllLinesAndStations</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getStationinfoBystationSubId</servlet-name>
+    <url-pattern>/GetAllLines</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>getAllLines_Stations_Devices</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetAllLinesAndStationsAndDevices</servlet-class>
+    <enabled>true</enabled>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getAllLines_Stations_Devices</servlet-name>
+    <url-pattern>/getAllLinesDevices</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>getEventsByStationIdServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetEventsByStationId</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>getEventsByStationIdServlet</servlet-name>
+    <url-pattern>/getEventsByStationId</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>getZhaoYuanEventsByStationIdServlet</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetZhaoYuanEventsByStationId</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>getZhaoYuanEventsByStationIdServlet</servlet-name>
+    <url-pattern>/getZhaoYuanEventsByStationId</url-pattern>
+  </servlet-mapping>
+  
+<!--   <servlet>
+    <servlet-name>getStatusByStationId</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetStatusByStationId</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getStatusByStationId</servlet-name>
+    <url-pattern>/getStatusByStationId</url-pattern>
+  </servlet-mapping> -->
+  
+  
+   <servlet>
+    <servlet-name>getStatusByStationIdAndDeviceId</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetStatusByStationIdAndDeviceId</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getStatusByStationIdAndDeviceId</servlet-name>
+    <url-pattern>/getStatusByDeviceId</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>getService</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetService</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getService</servlet-name>
+    <url-pattern>/getService</url-pattern>
+  </servlet-mapping>
+  
+  
+  <servlet>
+    <servlet-name>getEodStatus</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetEodStatus</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>	
+  <servlet-mapping>
+    <servlet-name>getEodStatus</servlet-name>
+    <url-pattern>/getEodStatus</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>getServiceStatus</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetServiceStatus</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>	
+  <servlet-mapping>
+    <servlet-name>getServiceStatus</servlet-name>
+    <url-pattern>/getServiceStatus</url-pattern>
+  </servlet-mapping>
+  
+   
+  <servlet>
+    <servlet-name>login</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.LoginController</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>login</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>GetCurStationID</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetCurrentStationId</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetCurStationID</servlet-name>
+    <url-pattern>/getCurrentStationId</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>GetStationModelByStationId</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetStationModelByStationId</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetStationModelByStationId</servlet-name>
+    <url-pattern>/getStationModelByStationId</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>GetAllEodStatus</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.GetAllEodStatus</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetAllEodStatus</servlet-name>
+    <url-pattern>/getAllEodStatus</url-pattern>
+  </servlet-mapping>
+   
+   <servlet>
+    <servlet-name>ToSysIndex</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.ToSysIndex</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ToSysIndex</servlet-name>
+    <url-pattern>/toSysIndex</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ToAFCSUP</servlet-name>
+    <servlet-class>com.avp.nj.sup.controller.ToAFCSUP</servlet-class>
+    <enabled>true</enabled> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ToAFCSUP</servlet-name>
+    <url-pattern>/sys/SUPmanage/view.do</url-pattern>
+  </servlet-mapping>
+	
+<!--	<filter>
+		<filter-name>loginFilter</filter-name>
+		<filter-class>com.avp.nj.sup.controller.LoginFilter</filter-class>
+		<init-param>
+			<param-name>LOGIN_PATH</param-name>
+			<param-value>/sys/SUPmanage/view.do</param-value>
+		</init-param>
+		<init-param>
+			<param-name>INITAL_PATH</param-name>
+			<param-value>/MetroInit</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>loginFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping> -->
+  
+  <filter>
+    <filter-name>sitemesh</filter-name>
+    <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>sitemesh</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>com.avp.nj.sup.util.ServletEncodingFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+	<listener> 
+  		<listener-class>com.avp.nj.sup.serviceadmin.ContainerListener</listener-class> 
+ 	</listener>
+
+	<welcome-file-list>
+		<welcome-file>/sys/SUPmanage/view.do</welcome-file>
+	</welcome-file-list>
+</web-app>

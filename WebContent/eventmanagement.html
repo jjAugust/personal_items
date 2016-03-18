@@ -1,0 +1,42 @@
+﻿<head>
+<link type="text/css" rel="stylesheet" href="static/css/station.css" />
+<link type="text/css" rel="stylesheet" href="css/jquery.treetable.css" />
+<link type="text/css" rel="stylesheet"
+	href="css/jquery.treetable.theme.default.css" />
+<script type="text/javascript" src="js/data.js"></script>
+<script src="static/js/lib/mode_switch.js"></script>
+<script type="text/javascript" src="static/js/table.js"></script>
+<script type="text/javascript" src="static/js/ztree.js"></script>
+</head>
+<body>
+	<div class="col-lg-3" id="stations" style="margin-left:-15px;">
+		<ul id="station-lis" class="ztree"></ul>
+	</div>
+	<div id="tab-tables">
+		<ul>
+			<li><a href="#tabs-1" onclick="type_list='event';zTreeOnclick();">事件列表</a></li>
+			<li><a href="#tabs-2" onclick="type_list='alarm';zTreeOnclick();">告警列表</a></li>
+			<li><a href="#tabs-3" onclick="type_list='warning';zTreeOnclick();">报警列表</a></li>
+			<li><a href="#tabs-5">模式日志列表</a></li>
+		</ul>
+		<div id="tabs-1" class="tab">
+			<table id="event-list"></table>
+			<div id="event-pager"></div>
+			<div id="event-search"></div>
+		</div>
+		<div id="tabs-2" class="tab">
+			<table id="alarm-list"></table>
+			<div id="alarm-pager"></div>
+			<div id="alarm-search"></div>
+		</div>
+		<div id="tabs-3" class="tab">
+			<table id="warning-list"></table>
+			<div id="warning-pager"></div>
+			<div id="warning-search"></div>
+		</div>
+		<div id="tabs-5" class="tab">
+			<table id="mode-history-list"></table>
+			<div id="mode-history-pager"></div>
+		</div>
+	</div>
+</body>

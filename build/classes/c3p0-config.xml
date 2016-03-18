@@ -1,0 +1,14 @@
+<c3p0-config>
+	<named-config name="suplog">   
+		<property name="user">njsc</property>
+		<property name="password">njsc</property>
+		<property name="driverClass">org.postgresql.Driver</property>
+		<property name="jdbcUrl">jdbc:postgresql://192.168.1.213:5432/logDB</property>
+		<property name="initialPoolSize">5</property>
+		<property name="maxPoolSize">20</property>
+		<property name="minPoolSize">5</property>
+		<property name="maxIdleTime">30</property>
+		<!--将连接池的连接数保持在minpoolsize，则必须小于maxIdleTime的设置。默认值为0代表不处理 -->
+		<property name="maxIdleTimeExcessConnections">15</property>
+	</named-config>
+</c3p0-config>

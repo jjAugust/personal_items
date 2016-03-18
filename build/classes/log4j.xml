@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/' debug="false">
+	<appender name="DAILY_FILE" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="../logs/njmetrosup.log"/>
+		<param name="MaxFileSize" value="512000KB"/>
+		<param name="MaxBackupIndex" value="100"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} %5p %c %x - %m%n"/>
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="levelMin" value="info"/>
+			<param name="levelMax" value="fatal"/>
+		</filter>
+	</appender>
+
+	<appender name="ASYNC_FILE" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="10000"/>
+		<param name="Blocking" value="false"/>
+		<appender-ref ref="DAILY_FILE"/>
+	</appender>
+
+	<appender name="ASYNC_DB" class="org.apache.log4j.AsyncAppender">
+		<param name="bufferSize" value="10000"/>
+		<param name="Blocking" value="false"/>
+		<appender-ref ref="DB_OUT"/>
+	</appender>
+	
+	<appender name="DB_OUT" class="org.apache.log4j.jdbcplus.DBAppender">
+		<param name="c3p0ConfName" value="suplog" />
+		<param name="Sql"
+			value="INSERT INTO tracelog (ModuleName,LoginID,UserName,Class,Method,createTime,LogLevel,MSG) values ('%c', '','','','','%d{yyyy-MM-dd HH:mm:ss,SSS}','%p','%m')" />
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="levelMin" value="error"/>
+			<param name="levelMax" value="fatal"/>
+		</filter>
+	</appender>
+	
+	<appender name="ASYNC_DBEVENT" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="10000" />
+		<param name="Blocking" value="false" />
+		<appender-ref ref="DBEVENT_OUT" />
+	</appender>
+	
+	<appender name="DBEVENT_OUT" class="org.apache.log4j.jdbcplus.DBAppender">
+		<param name="c3p0ConfName" value="suplog"/>
+		<param name="Sql" value="INSERT INTO traceevent (OperatorID,ModuleName,OperationTime,EventLevel,TargetType,Target,OperationType,OperationResult,msg) 
+			values ('%X{OperatorID}','%c','%X{OperationTime}','%X{EventLevel}','%X{TargetType}','%X{Target}','%X{OperationType}','%X{OperationResult}','%m')"/>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="levelMin" value="event"/>
+		</filter>
+	</appender>
+ 
+	<logger name="AFCSUP" additivity="false">
+	    <level value="info"/>
+	    <!--appender-ref ref="ASYNC_DB"/-->
+	    <appender-ref ref="ASYNC_FILE"/>
+	    <!--appender-ref ref="ASYNC_DBEVENT"/-->
+	</logger>
+	
+	<root>
+		<level value="info"/>
+		<appender-ref ref="ASYNC_FILE"/>
+	</root>
+	
+</log4j:configuration>

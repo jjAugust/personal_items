@@ -1,0 +1,468 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="static/treetable/css/jquery.treetable.css" />
+<link rel="stylesheet" href="static/treetable/css/jquery.treetable.theme.default.css" />
+<script type="text/javascript" src="static/treetable/js/jquery.treetable.js" ></script>
+<script type="text/javascript" src="js/json2.js"></script>
+<script type="text/javascript" src="static/js/eod.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#eod-mode").show();
+	$("#ztree-main").hide();
+	$('#eod-mode').click(eod_show);
+	$("#tab-tables" ).tabs();
+	var eodDiff ="off";
+ 	
+	EodStatus();
+	EodSelect("load");
+	
+ 	$("#EodStatus").click(function(){
+ 		if(eodDiff == "off"){
+ 			freshen("refresh");
+ 	 		EodSelect("update");
+ 		}else{
+ 			eodDiff = "off";
+ 			EodStatus();
+ 			EodSelect("load");
+ 		}
+ 		
+ 	});
+ 	
+ 	$("#EodDiff").click(function(){
+ 		eodDiff = "on";
+ 		freshen("diff");
+ 		EodSelect("update");
+ 	});
+
+ 	$("#verSerach").click(function(){
+ 		clickSearch();
+ 	});
+ 	
+ 	$("th").css({"font-size":"12px;"}); 	
+ 	$("td").css({"font-size":"12px"}); 		
+ 	$("#treeTable1 td").css({"width":"9%"}); 	
+ 	$("#treeTable1 td:first").css({"width":"19%"});		
+ 	$("#tabs-2").show();
+ 	
+ 	$("#dialog").dialog({
+		   autoOpen:false,
+		   modal:true,
+		   buttons: {
+			   "确认": function() {
+				   $(this).dialog("close");
+			   }
+		   }
+	});	
+});
+
+function EodStatus(){
+	$("#tabs-2").hide();
+	$("#tabs-2").html('<table id="treeTable1" class=" ui-jqgrid ui-widget ui-widget-content ui-corner-all" border="1">'
+			+'<tbody></tbody></table>');
+	$.ajax({
+		type : "get",
+		url : "../AFCSUP/getAllLinesDevices",
+		dataType : "json",
+		async : false,
+		success : function(msg) {
+			if (JSON.stringify(msg) != "{}") {
+				var deviceStr = "";
+				var stationStr = "";
+				var lineStr = "";
+				for (var i = 0; i < msg.length; i++) {
+					var lineName = msg[i].name;
+					var lineId = msg[i].id;
+					var lineObj = "<tr data-tt-id='node-"+ i +"'  id='"+lineId+"'><td>"+
+						"<span class='folder'>"+ lineName +"</span></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+					var stationArray = msg[i].children;
+					for (var j = 0; j < stationArray.length; j++) { 
+						var stationName = stationArray[j].name;
+						var stationId = stationArray[j].id;
+						var stationObj = "<tr data-tt-id='node-" + i +"-"+ j +"' data-tt-parent-id='node-"+ i +"' id='"+stationId+"'><td>"+
+							"<span class='folder'>"+stationName+"</span></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+						var deviceArray = stationArray[j].children;
+						if(deviceArray == null){
+							deviceArray = [];
+						}
+						for (var k = 0; k < deviceArray.length; k++) {
+							var deviceName = deviceArray[k].name;
+							var deviceId = deviceArray[k].id;
+							var deviceObj = "<tr data-tt-id='node-"+ i +"-"+ j +"-"+ k +"' data-tt-parent-id='node-"+ i +"-"+ j +"' id='"+deviceId+"'><td>"+
+								"<span class='file'>"+deviceName+"</span></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+							deviceStr += deviceObj;
+						}
+						stationStr += stationObj;
+						stationStr += deviceStr;
+						deviceStr = "";
+					}
+					lineStr += lineObj;
+					lineStr += stationStr;
+					$("#treeTable1 tbody").append(lineStr);
+					stationStr = "";
+					lineStr = "";
+				}
+				freshen("refresh");
+			}
+		
+		}
+	}); 
+	
+	$("#treeTable1").treetable({expandable :true});
+	$("#treeTable2").treetable({expandable :true});
+	
+	
+ 	
+ 	$("th").css({"font-size":"12px","color":"black"}); 	
+ 	$("td").css({"font-size":"12px","color":"black"}); 
+ 	$("#searchVersion td").css({"color":"white"}); 
+ 	$("#eod-dialog td").css({"color":"white"}); 
+ 	$("#treeTable1 td").css({"width":"9%"}); 	
+ 	$("#treeTable1 td:first").css({"width":"19%"});		
+ 	$("#tabs-2").show();
+
+ 	
+}
+
+function EodSelect(obj){
+	$(".chzn-select").empty("");
+	$(".chzn-select").append("<option value = ''>不选择</option>");
+	$.ajax({
+		type:"GET",
+		url:"getAllEodStatus",
+		dataType:"json",
+		async:true,
+		success:function(data)
+		{
+			 $.each(data, function(i,val){     
+				 $.each(val, function(j,va){      
+					 	$("#"+i).append("<option value = '"+va+"'>"+va+"</option>");
+				  }); 
+			  }); 
+			if(obj =="update"){
+				 $(".chzn-select").trigger("liszt:updated");
+			}else{
+				 $(".chzn-select").chosen({
+				 	    no_results_text: "没有找到",
+				});
+			}
+			
+			
+				//$("#TicketTypes").append("<option value = 'all'>全部</option>");
+		}
+	});
+	
+}
+
+function isEmptyObject(o){
+    for(var n in o){
+
+        return false;
+    }
+    return true;
+}
+
+function freshen(obj){
+	$.ajax({
+		type : "get",
+		url : "../AFCSUP/getEodStatus?selectType="+obj,
+		dataType : "json",
+		async : false,
+		success : function(msg) {
+			if (JSON.stringify(msg) != "[]") {
+				for (var i = 0; i < msg.length; i++) {
+					var id = msg[i].id;
+					var statusObj = msg[i].status;
+					if(isEmptyObject(statusObj) && obj == "diff"){
+						$("#"+id).remove();	
+						continue;
+					}
+					var statusArray = [];
+					statusArray.push(statusObj.CABKVR);
+					statusArray.push(statusObj.CURWAI);
+					statusArray.push(statusObj.CAEDVR);
+					statusArray.push(statusObj.NAEDVR);
+					statusArray.push(statusObj.CZEDVR);
+					statusArray.push(statusObj.NZEDVR);
+					statusArray.push(statusObj.RW1TPV);
+					statusArray.push(statusObj.RW2TPV);
+					statusArray.push(statusObj.RELEAE);
+					$("tr[id = '"+ id +"'] td:not(:first)").each(function(index,obj){
+						$(obj).text(statusArray[index]);
+					});
+				}
+			}
+		}
+	});
+
+ 	$("#searchVersion input[type='text']").each(function(index,obj){
+		$(obj).keydown(function(event){
+	 		if(event.keyCode == 13){
+				researchVersion();
+	 		}
+	 	});
+	});
+}
+
+function researchVersion(){
+	var hasVal = false;
+	var chkSucc = true;
+	var searchCon = [];
+	$("#searchVersion .chzn-select").each(function(index,obj){
+		var condVal = $(obj).val();
+		if(condVal != ""){
+			searchCon.push(condVal);
+		}
+		if (searchCon.length > 0) {
+			hasVal = true;
+		}
+	});
+	for (var i = 0; i < searchCon.length; i++) {
+		var condVal = searchCon[i];
+		if (!checkValidate(condVal)) {
+			chkSucc = false;
+			break;
+		}
+	}
+	var choiceCondition = $("input[name='verShow']:checked").val();
+	var searchCondition = [];
+	var cabkvrVal = $("#CABKVR").val() || "";
+	var curwaiVal = $("#CURWAI").val() || "";
+	var caedvrVal = $("#CAEDVR").val() || "";
+	var naedvrVal = $("#NAEDVR").val() || "";
+	var czedvrVal = $("#CZEDVR").val() || "";
+	var nzedvrVal = $("#NZEDVR").val() || "";
+	var RW1TPVal = $("#RW1TPV").val() || "";
+	var RW2TPVal = $("#RW2TPV").val() || "";
+	var RELEAEVal = $("#RELEAE").val() || "";
+	
+	searchCondition.push(cabkvrVal);
+	searchCondition.push(curwaiVal);
+	searchCondition.push(caedvrVal);
+	searchCondition.push(naedvrVal);
+	searchCondition.push(czedvrVal);
+	searchCondition.push(nzedvrVal);
+	searchCondition.push(RW1TPVal);
+	searchCondition.push(RW2TPVal);
+	searchCondition.push(RELEAEVal);
+	
+ 	$.ajax({
+		type : "get",
+		url : "../AFCSUP/getEodStatus?selectType=refresh",
+		dataType : "json",
+		async : false,
+		success : function(msg) {
+			if (JSON.stringify(msg) != "[]") {
+				for (var i = 0; i < msg.length; i++) {
+					var id = msg[i].id;
+					var statusObj = msg[i].status;
+					var statusArray = [];
+					statusArray.push(statusObj.CABKVR);
+					statusArray.push(statusObj.CURWAI);
+					statusArray.push(statusObj.CAEDVR);
+					statusArray.push(statusObj.NAEDVR);
+					statusArray.push(statusObj.CZEDVR);
+					statusArray.push(statusObj.NZEDVR);
+					statusArray.push(statusObj.RW1TPV);
+					statusArray.push(statusObj.RW2TPV);
+					statusArray.push(statusObj.RELEAE);
+					//根据选择条件突出显示差异的值
+					$("tr[id = '"+ id +"'] td:not(:first)").each(function(index,obj){
+						$(obj).css({"color":"black"});
+					});
+					if (choiceCondition == "allShow") {
+						$("tr[id = '"+ id +"'] td:not(:first)").each(function(index,obj){
+							var origVal = statusArray[index];
+							var compVal = searchCondition[index];
+							$(obj).text(origVal);
+							if(!chkSucc) {
+								$(obj).css({"color":"black"});
+							} else if (compVal != "" && compVal != origVal) {
+								$(obj).css({"color":"red"});
+							}
+							$(obj).show();
+						});
+					} else {
+						if(!hasVal) {
+							$("#dialog").dialog( "open" );
+							return false;
+						}
+						var count = 0;
+						$("tr[id = '"+ id +"'] td:not(:first)").each(function(index,obj){
+							var origVal = statusArray[index];
+							var compVal = searchCondition[index];
+							$(obj).text(origVal);
+							if (compVal != "" && compVal != origVal) {
+								$(obj).css({"color":"red"});
+							}
+							if (compVal != "" && compVal == origVal) {
+								$(obj).text("");
+								count ++;
+							}
+						});
+					}
+					
+				}
+			}
+		}
+	});
+}
+
+function checkValidate(condVal){
+	var  newPar=/^(0|[1-9][0-9]*)$/;
+	return newPar.test(condVal);
+}
+
+function clickSearch(){
+	var hasVal = false;
+	var chkSucc = true;
+	var searchCon = [];
+
+	$("#searchVersion .chzn-select").each(function(index,obj){
+		var condVal = $(obj).val();
+		if(condVal !== ""){
+			searchCon.push(condVal);
+		}
+		if (searchCon.length > 0) {
+			hasVal = true;
+		}
+	});
+	for (var i = 0; i < searchCon.length; i++) {
+		var condVal = searchCon[i];
+		if (!checkValidate(condVal)) {
+			chkSucc = false;
+			break;
+		}
+	}
+	researchVersion();
+}
+</script>
+</head>
+<body>
+ <div id="myShow" style="display:none;text-align:center;">
+        <img alt="loading" src="images/waiting.gif" /><br/></br>
+        <span>EOD正在下发..</span>
+    </div>
+	<div style="margin-top:12px;">
+<table id="searchVersion" border="0px">
+		<tr >
+			<td width="100" style="font-size: 12px;">ACC 黑名单</td><td style="font-size: 12px;"  width="150"><select  style="width:130;" class="chzn-select" data-placeholder="选择 差异" id="CABKVR" /></select></td>
+			<td width="100"  style="font-size: 12px;">ACC 模式履历</td><td style="font-size: 12px;" width="150"><select  style="width:130;" class="chzn-select" data-placeholder="选择 差异" id="CURWAI" /></select></td>
+			<td width="100"  style="font-size: 12px;">ACC 当前参数</td><td style="font-size: 12px;" width="150"><select style="width:130;" class="chzn-select" data-placeholder="选择 差异" id="CAEDVR" /></select></td>
+			<td width="100"  style="font-size: 12px;">读写器1TP版本</td><td style="font-size: 12px;" width="150"><select style="width:130;" class="chzn-select" data-placeholder="选择 差异" id="RW1TPV" /></select></td>
+			<td width="70"  style="font-size: 12px;">软件版本</td><td  style="font-size: 12px;"><select style="width:130;" class="chzn-select" data-placeholder="选择 差异" id="RELEAE" /></td>
+		</tr>
+		<tr height="50">
+			<td width="100" style="font-size: 12px;">ACC 未来参数</td><td width="150"  style="font-size: 12px;"><select style="width:130;" class="chzn-select" data-placeholder="选择 差异" id="NAEDVR" /></select></td>
+			<td width="100" style="font-size: 12px;">ZLC 当前参数</td><td width="150" style="font-size: 12px;"><select style="width:130;" class="chzn-select" data-placeholder="选择 差异" id="CZEDVR" /></select></td>
+			<td width="100" style="font-size: 12px;">ZLC 未来参数</td><td width="150" style="font-size: 12px;"><select style="width:130;" class="chzn-select" data-placeholder="选择 差异" id="NZEDVR" /></select></td>
+			<td width="100" style="font-size: 12px;">读写器2TP版本</td><td width="150" style="font-size: 12px;"><select style="width:130;" class="chzn-select" data-placeholder="选择 差异" id="RW2TPV" /></select></td>
+			<td colspan="2" width="300"  style="font-size: 12px;"><input type="radio" name="verShow" value="allShow" checked="checked" /><span style="margin-left: 5px;font-size: 15px;margin-right: 10px;color:white">显示全部</span>
+			<input type="radio" name="verShow" value="difShow" /><span style="margin-left: 5px;font-size: 15px;	margin-right: 20px;color:white">显示差异</span>
+			<input type="button" id="verSerach" value="查询">
+			</td>	
+		</tr>
+	</table>
+<div id="tab-tables"  style="height:700px;">
+		<ul>
+			<li><a href="#tabs-1" onclick="type_list='status';zTreeOnclick();">EOD列表</a></li>
+		</ul>
+	<div id="tabs-1" class="tab"  style="height:640px; ">
+		<table id="treeTable2" style="position: absolute;width:95.4%; z-index:98;overflow-y:scroll; "  class="ui-jqgrid ui-widget ui-widget-content ui-corner-all" border="1">
+			<thead>
+				<tr>
+					<th style="font-size: 12px; width:19%;">设备</th>
+					<th style="font-size: 12px; width:9%;">ACC 黑名单</th>
+					<th style="font-size: 12px; width:9%;">ACC 模式履历</th>
+					<th style="font-size: 12px; width:9%;">ACC 参数当前</th>
+					<th style="font-size: 12px; width:9%;">ACC 参数未来</th>
+					<th style="font-size: 12px; width:9%;">ZLC 参数当前</th>
+					<th style="font-size: 12px; width:9%;">ZLC 参数未来</th>
+					<th style="font-size: 12px; width:9%;">读写器1TP</th>
+					<th style="font-size: 12px; width:9%;">读写器2TP</th>
+					<th style="font-size: 12px; width:9%;">软件版本</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="tabs-2" style="margin-top:19px; height:570px;overflow-y:scroll; display:none;">
+			<table id="treeTable1"  class=" ui-jqgrid ui-widget ui-widget-content ui-corner-all" border="1">
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+	<div id="eod-dialog" title="EOD发布" class="row" style="display: none; width:700px;" ng-controller="cmdDialogCtrl">
+		<div class="col-lg-6"  style="OVERFLOW-Y: auto; height:400px;">
+			<h3>发布目标</h3>
+			<ul id="eod-lis" class="ztree"></ul>
+		</div>
+		<div class="col-lg-6">
+			<h3>发布类型</h3>
+			<table class=cmd-table>
+				<tr>
+					<td><input type=radio name=cmd value=INIACC id=cmd_0 />&nbsp;<label
+						for=cmd_0>ACC EOD</label></td>
+				</tr>
+				<tr>
+					<td><input type=radio name=cmd value=INIEOD id=cmd_1 />&nbsp;<label
+						for=cmd_1>ZLC EOD</label></td>
+				</tr>
+				<tr>
+					<td><input type=radio name=cmd value=INIBLK id=cmd_2 />&nbsp;<label
+						for=cmd_2>黑名单</label></td>
+				</tr>
+				<tr>
+					<td><input type=radio name=cmd value=INIWVD id=cmd_3  />&nbsp;<label
+						for=cmd_3>模式履历</label></td>
+				</tr>
+				<tr>
+					<td><input type=radio name=cmd value=SETEOD id=cmd_20 />&nbsp;<label
+						for=cmd_20>EOD将来版</label></td>
+				</tr>
+			</table>
+			 <span id='mode_msg_cmd' style='color:red;'>&nbsp;</span>
+		</div>
+		<div class="col-lg-6" id="furtur_eod_version" style="display: none;" >
+			<table class=cmd-table>
+				<tr>
+					<td><input type=radio name=acc_zlc value=0 id=cmd_23 / checked=checked>&nbsp;<label
+						for=cmd_23>ACC EOD</label></td>
+					<td><input type=radio name=acc_zlc value=1 id=cmd_24 />&nbsp;<label
+						for=cmd_24>ZLC EOD</label></td>
+				</tr>
+				<tr>
+					<td>生效版本号</td>
+					<td><input type=text name="eff_version" maxlength="10" /></td>
+				</tr>
+				<tr>
+					<td>生效开始时间</td>
+					<td><input readonly="readonly"  id="effective_start_date" type=text/></td>
+				</tr>
+				<tr>
+					<td>生效结束时间</td>
+					<td><input readonly="readonly"  id="effective_end_date" type=text/></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+	<div id="dialog" style="display:none">
+		未输入查询信息或查询信息不正确
+	</div>
+	
+	<div id="username-dialog" style="display: none;">
+		<table>
+			<tr>
+				<td align="center" valign="top" >用户：</td>
+				<td valign="top"><input id=user_name type=text onkeyup="value=this.value.replace(/\D+/g,'')"></td>
+			</tr>
+			 <tr>
+				<td align="center" valign="top" >密码：</td>
+  				<td valign="top"><input id="pass_word" type="password"></td>
+			</tr>
+			<tr><td></td><td style="color:red;" id="user_msg"></td></tr>
+		</table>
+	</div>
+</body>
+</html>
