@@ -875,8 +875,8 @@
   <path
      inkscape:connector-curvature="0"
      id="path5058-8"
-     style="display:inline;fill:none;stroke:#f8f8f8;stroke-width:3.73433161;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="M 1.1114466,722.68331 1497.0638,722.80701" />
+     d="M 1.1122863,722.68328 1365.1828,722.80704"
+     style="fill:none;stroke:#f8f8f8;stroke-width:3.56671238;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
   <text
      xml:space="preserve"
      style="font-size:15.19124985px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#f9f9f9;fill-opacity:1;stroke:none;display:inline;font-family:Arial;-inkscape-font-specification:Arial"
@@ -2957,14 +2957,14 @@
        inkscape:connector-curvature="0"
        style="fill:#0000ff;display:inline" />
   </g>
- <!--  <rect
-     style="fill:#000f23;fill-opacity:1;stroke-width:0.73000002;stroke-miterlimit:4;stroke-dasharray:none"
+  <rect
+     style="fill:#241f1c;fill-opacity:1;stroke-width:0.73000002;stroke-miterlimit:4;stroke-dasharray:none"
      id="rect5246"
      width="131.29436"
      height="764.51471"
      x="1367.8823"
      y="1.367645"
-     ry="5.4266186" /> -->
+     ry="5.4266186" />
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32.57716751px;line-height:125%;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
@@ -3012,13 +3012,13 @@
 
    </body>
    </foreignObject>
- <!--  <ellipse
-     style="fill:#000f23;fill-opacity:1;stroke-width:0.73000002;stroke-miterlimit:4;stroke-dasharray:none"
+  <ellipse
+     style="fill:#241f1c;fill-opacity:1;stroke-width:0.73000002;stroke-miterlimit:4;stroke-dasharray:none"
      id="path5315"
      cx="1434.4075"
      cy="733.94647"
      rx="61.174614"
-     ry="22.111305" /> -->
+     ry="22.111305" />
   <text
      xml:space="preserve"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22.22426414px;line-height:125%;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none"
@@ -3031,16 +3031,7 @@
        sodipodi:role="line"
        id="tspan5845-9-9"
        x="1246.9198"
-       y="829.76849">开启提示音</tspan></text>
-       
+       y="816.88123">开启提示音</tspan></text>
 
- <rect
-         style="fill:#ffffff;fill-opacity:1"
-         id="rect5220"
-         width="126.9958"
-         height="3.9075627"
-         x="1371.3636"
-         y="55.767727"
-         ry="0" />
-     
+
 </svg>

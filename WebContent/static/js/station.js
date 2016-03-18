@@ -853,7 +853,7 @@ jj= root_overall.getElementById("jj2");
 	//     caption : "",
 	// });
 // $(p).html('<tr><td>123</td><td>2</td></tr>');
-j1();
+// j1();
 
   //$('#svgholder embed').getSVG().fitToBox(1400, 1400);
 
